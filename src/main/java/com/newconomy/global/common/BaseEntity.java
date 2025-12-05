@@ -1,4 +1,4 @@
-package com.newconomy.global.domain;
+package com.newconomy.global.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
