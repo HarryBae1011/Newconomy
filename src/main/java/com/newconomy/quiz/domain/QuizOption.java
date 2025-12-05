@@ -1,6 +1,6 @@
 package com.newconomy.quiz.domain;
 
-import com.newconomy.global.domain.BaseEntity;
+import com.newconomy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

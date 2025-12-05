@@ -1,6 +1,6 @@
 package com.newconomy.term.domain;
 
-import com.newconomy.global.domain.BaseEntity;
+import com.newconomy.global.common.BaseEntity;
 import com.newconomy.term.enums.TermCategory;
 import jakarta.persistence.*;
 import lombok.*;
