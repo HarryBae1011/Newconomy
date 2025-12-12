@@ -40,19 +40,21 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/login/**",
                                 "/oauth2/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
                                 "/social-login-test.html"
                         ).permitAll()
                         .anyRequest().authenticated()
+                ).addFilterBefore(
+                new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
                 )
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                ;
 
         return http.build();
     }

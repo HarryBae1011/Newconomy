@@ -46,6 +46,10 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
     }
 
+    public boolean isSocialUser() {
+        return provider != null;
+    }
+
     // Enum 클래스들
     public enum SocialProvider {
         KAKAO, GOOGLE
