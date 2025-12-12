@@ -14,8 +14,24 @@ public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(length = 20, nullable = false)
     private String name;
+
+    private String password;
+
+    private String profileImage;
+
+    @Enumerated(EnumType.STRING)
+    private SocialProvider provider;  // KAKAO, GOOGLE
+
+    private String providerId;  // 소셜 로그인 고유 ID
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;  // USER, ADMIN
 
     @Column(length = 30)
     private String nickname;
@@ -24,4 +40,18 @@ public class Member extends BaseEntity {
     private int level = 1;
 
     private int totalPoints;
+
+    public void updateProfile(String name, String profileImage) {
+        this.name = name;
+        this.profileImage = profileImage;
+    }
+
+    // Enum 클래스들
+    public enum SocialProvider {
+        KAKAO, GOOGLE
+    }
+
+    public enum Role {
+        USER, ADMIN
+    }
 }
