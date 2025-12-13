@@ -1,6 +1,7 @@
 package com.newconomy.news.enums;
 
 import com.newconomy.global.error.exception.handler.GeneralHandler;
+import com.newconomy.global.response.status.ErrorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,10 +18,10 @@ public enum NewsCategory {
 
     private final String displayName;
 
-/*    public static NewsCategory toNewsCategory(String displayName) {
+    public static NewsCategory toNewsCategory(String displayName) {
         return Arrays.stream(values())
                 .filter(c -> c.displayName.equals(displayName))
                 .findAny()
-                .orElseThrow(() -> new GeneralHandler(ErrorStatus.ITEM_CATEGORY_NOT_FOUND));
-    }*/
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_CATEGORY_NOT_FOUND));
+    }
 }

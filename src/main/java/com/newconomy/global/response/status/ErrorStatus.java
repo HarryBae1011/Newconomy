@@ -20,7 +20,9 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4000", "존재하지 않는 유저입니다."),
     DUPLICATE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 유저입니다."),
     SOCIAL_LOGIN_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4002", "소셜 로그인 계정입니다."),
-    WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4003", "비밀번호가 일치하지 않습니다.")
+    WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4003", "비밀번호가 일치하지 않습니다."),
+
+    NEWS_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "NEWS_CATEGORY4000", "존재하지 않는 뉴스 카테고리입니다.")
     ;
 
     private final HttpStatus httpStatus;
