@@ -23,8 +23,10 @@ public class News extends BaseEntity {
     private String title;
 
     @Lob
-    @Column(nullable = false)
     private String content;
+
+    @Lob
+    private String fullContent;
 
     @Enumerated(value = EnumType.STRING)
     private NewsCategory newsCategory;
@@ -32,6 +34,9 @@ public class News extends BaseEntity {
     //언론사 ex) 네이버, 다음 등...
     @Column(nullable = false)
     private String source;
+
+    @Column(nullable = false)
+    private String url;
 
     @Column(nullable = false)
     private String originalUrl;
@@ -44,4 +49,8 @@ public class News extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NewsTerm> newsTermList = new ArrayList<>();
+
+    public void updateFullContent(String fullContent) {
+        this.fullContent = fullContent;
+    }
 }
