@@ -30,6 +30,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
 
+	// Jsoup (HTML 파싱 라이브러리)
+	implementation 'org.jsoup:jsoup:1.17.2'
+
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
