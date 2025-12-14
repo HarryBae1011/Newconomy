@@ -14,9 +14,4 @@ public class HtmlUtils {
     public static String cleanHtml(String html) {
         return Jsoup.clean(html, Safelist.basic());
     }
-
-    // 엔티티 변환 (&quot; → ")
-    public static String unescapeHtml(String html) {
-        return Jsoup.parse(html).text();
-    }
 }
