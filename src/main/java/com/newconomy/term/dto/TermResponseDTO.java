@@ -35,4 +35,21 @@ public class TermResponseDTO {
         private String termName;
         private String detailedExplanation;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TermAutocompleteListDTO {
+        private List<TermAutocompleteDTO> terms;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TermAutocompleteDTO {
+        private Long id;
+        private String name;
+    }
 }

@@ -26,7 +26,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     NEWS_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "NEWS_CATEGORY4000", "존재하지 않는 뉴스 카테고리입니다."),
 
-    TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4000", "존재하지 않는 경제 용어 입니다.")
+    TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4000", "존재하지 않는 경제 용어 입니다."),
+
     ;
 
     private final HttpStatus httpStatus;
