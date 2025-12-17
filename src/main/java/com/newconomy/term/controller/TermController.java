@@ -1,12 +1,14 @@
 package com.newconomy.term.controller;
 
 import com.newconomy.global.response.ApiResponse;
+import com.newconomy.term.domain.Term;
 import com.newconomy.term.dto.TermResponseDTO;
 import com.newconomy.term.service.TermService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +30,17 @@ public class TermController {
                 TermResponseDTO.TermResultListDTO.builder()
                 .terms(singleTermResultDTOList)
                 .build());
+    }
+
+    @GetMapping("/{termId}")
+    @Operation(summary = "특정 경제 용어 상세 조회", description = "경제 용어를 상세 조회하는 API")
+    public ApiResponse<TermResponseDTO.SingleTermDTO> viewSingleTerm(@PathVariable Long termId) {
+        Term term = termService.getSingleTerm(termId);
+        return ApiResponse.onSuccess(
+                TermResponseDTO.SingleTermDTO.builder()
+                        .termId(term.getId())
+                        .termName(term.getTermName())
+                        .detailedExplanation(term.getDetailedExplanation())
+                        .build());
     }
 }

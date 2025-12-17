@@ -1,5 +1,7 @@
 package com.newconomy.term.service;
 
+import com.newconomy.global.error.exception.handler.GeneralHandler;
+import com.newconomy.global.response.status.ErrorStatus;
 import com.newconomy.term.domain.Term;
 import com.newconomy.term.dto.TermResponseDTO;
 import com.newconomy.term.repository.TermRepository;
@@ -24,5 +26,10 @@ public class TermService {
                         .termId(t.getId())
                         .termName(t.getTermName())
                         .build()).toList();
+    }
+
+    public Term getSingleTerm(Long termId) {
+        return termRepository.findById(termId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.TERM_NOT_FOUND));
     }
 }
