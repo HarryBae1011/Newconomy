@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Term extends BaseEntity {
+public class Term {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,5 +26,5 @@ public class Term extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TermCategory termCategory;
 
-    private int difficultyLevel;
+    private Integer difficultyLevel;
 }
