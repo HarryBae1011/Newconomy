@@ -2,18 +2,12 @@ package com.newconomy.news.crawling;
 
 import com.newconomy.global.common.DateUtils;
 import com.newconomy.global.common.HtmlUtils;
-import com.newconomy.global.error.exception.handler.GeneralHandler;
-import com.newconomy.global.response.status.ErrorStatus;
 import com.newconomy.news.domain.News;
 import com.newconomy.news.dto.NewsResponseDTO;
 import com.newconomy.news.enums.NewsCategory;
 import com.newconomy.news.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +28,6 @@ public class SearchService {
     public NewsResponseDTO.NewsItemsResponseDTO searchNews(String query, Integer display) {
         // 뉴스 기사 목록 (기사 제목, 요약) 수집
         NewsResponseDTO.NewsItemsResponseDTO newsItemsResponseDTO = searchClient.searchNews(query, display);
-
-        // 기존 데이터 삭제
-        newsRepository.deleteAll();
 
         List<News> newsList = newsItemsResponseDTO.getItems().stream()
                 .filter(i -> {
