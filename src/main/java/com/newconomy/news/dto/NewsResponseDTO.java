@@ -29,4 +29,23 @@ public class NewsResponseDTO {
         private String description;
         private String pubDate;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class NewsListViewDTO {
+        private List<SingleNewsDTO> newsDTOList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SingleNewsDTO {
+        private Long newsId;
+        private String title;
+        private String url;
+        private String originalUrl;
+    }
 }
