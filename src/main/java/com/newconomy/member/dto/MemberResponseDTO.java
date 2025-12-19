@@ -14,6 +14,7 @@ public class MemberResponseDTO {
     public static class MemberProfileDTO {
         private String name;
         private String nickName;
+        private String profileImage;
         private int level;
         private int total_points;
     }
