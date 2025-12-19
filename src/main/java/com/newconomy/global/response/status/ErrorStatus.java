@@ -21,6 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
     DUPLICATE_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 유저입니다."),
     SOCIAL_LOGIN_MEMBER(HttpStatus.BAD_REQUEST, "MEMBER4002", "소셜 로그인 계정입니다."),
     WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4003", "비밀번호가 일치하지 않습니다."),
+    NICKNAME_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "MEMBER4004", "이미 존재하는 닉네임입니다."),
 
     NEWS_NOT_FOUND(HttpStatus.NOT_FOUND, "NEWS4000", "존재하지 않는 뉴스 기사입니다."),
 

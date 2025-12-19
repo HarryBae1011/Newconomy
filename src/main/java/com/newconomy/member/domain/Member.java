@@ -3,6 +3,7 @@ package com.newconomy.member.domain;
 import com.newconomy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Getter
@@ -41,9 +42,16 @@ public class Member extends BaseEntity {
 
     private int totalPoints;
 
-    public void updateProfile(String name, String profileImage) {
-        this.name = name;
-        this.profileImage = profileImage;
+    public void updateProfile(String name, String nickname, String profileImage) {
+        if (StringUtils.hasText(name)) {
+            this.name = name;
+        }
+        if (StringUtils.hasText(nickname)) {
+            this.nickname = nickname;
+        }
+        if (StringUtils.hasText(profileImage)) {
+            this.profileImage = profileImage;
+        }
     }
 
     public boolean isSocialUser() {

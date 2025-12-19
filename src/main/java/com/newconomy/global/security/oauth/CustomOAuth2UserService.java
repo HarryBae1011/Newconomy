@@ -61,6 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .map(existingMember -> {
                     existingMember.updateProfile(
                             oAuth2UserInfo.getName(),
+                            existingMember.getNickname(),
                             oAuth2UserInfo.getProfileImage()
                     );
                     return existingMember;
