@@ -29,6 +29,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4000", "존재하지 않는 경제 용어 입니다."),
 
+    MEMBER_TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_TERM4000", "해당 용어의 학습 내역이 존재하지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;

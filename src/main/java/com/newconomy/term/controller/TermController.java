@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +33,10 @@ public class TermController {
 
     @GetMapping("/{termId}")
     @Operation(summary = "특정 경제 용어 상세 조회", description = "경제 용어를 상세 조회하는 API")
-    public ApiResponse<TermResponseDTO.SingleTermDTO> viewSingleTerm(@PathVariable Long termId) {
-        Term term = termService.getSingleTerm(termId);
+    public ApiResponse<TermResponseDTO.SingleTermDTO> viewSingleTerm(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable Long termId) {
+        Term term = termService.getSingleTerm(memberId, termId);
         return ApiResponse.onSuccess(
                 TermResponseDTO.SingleTermDTO.builder()
                         .termId(term.getId())

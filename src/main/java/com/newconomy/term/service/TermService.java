@@ -2,6 +2,10 @@ package com.newconomy.term.service;
 
 import com.newconomy.global.error.exception.handler.GeneralHandler;
 import com.newconomy.global.response.status.ErrorStatus;
+import com.newconomy.member.domain.Member;
+import com.newconomy.member.domain.MemberTerm;
+import com.newconomy.member.repository.MemberRepository;
+import com.newconomy.member.repository.MemberTermRepository;
 import com.newconomy.term.domain.Term;
 import com.newconomy.term.dto.TermResponseDTO;
 import com.newconomy.term.repository.TermRepository;
@@ -11,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +25,8 @@ import java.util.List;
 public class TermService {
 
     private final TermRepository termRepository;
+    private final MemberRepository memberRepository;
+    private final MemberTermRepository memberTermRepository;
 
     public List<TermResponseDTO.SingleTermResultDTO> searchAllTerms() {
         List<Term> termList = termRepository.findAll();
@@ -31,9 +38,39 @@ public class TermService {
                         .build()).toList();
     }
 
-    public Term getSingleTerm(Long termId) {
-        return termRepository.findById(termId)
+    @Transactional
+    public Term getSingleTerm(Long memberId, Long termId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        Term term = termRepository.findById(termId)
                 .orElseThrow(() -> new GeneralHandler(ErrorStatus.TERM_NOT_FOUND));
+
+        boolean b = memberTermRepository.existsByMemberAndTerm(member, term);
+
+        if (b) {
+            MemberTerm memberTerm = memberTermRepository.findByMemberAndTerm(member, term)
+                    .orElseThrow(() -> new GeneralHandler(ErrorStatus.MEMBER_TERM_NOT_FOUND));
+
+            // 이미 조회한 적이 있는 용어라면 viewCount 증가, 최근 조회 일시 갱신
+            memberTerm.updateTermStudy(LocalDateTime.now());
+            memberTermRepository.save(memberTerm);
+        } else {
+            // 조회한 적이 없는 용어인 경우 MemberTerm 객체 생성
+            MemberTerm built = MemberTerm.builder()
+                    .member(member)
+                    .term(term)
+                    .masteryLevel(0)
+                    .viewCount(0)
+                    .isSaved(false)
+                    .firstLearnedAt(LocalDateTime.now())
+                    .lastReviewedAt(LocalDateTime.now())
+                    .build();
+
+            memberTermRepository.save(built);
+        }
+
+        return term;
     }
 
     public List<TermResponseDTO.TermAutocompleteDTO> autocomplete(String keyword) {

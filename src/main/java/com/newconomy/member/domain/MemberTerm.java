@@ -29,4 +29,13 @@ public class MemberTerm {
     private boolean isSaved;
     private LocalDateTime firstLearnedAt;
     private LocalDateTime lastReviewedAt;
+
+    public void updateTermStudy(LocalDateTime lastReviewedAt) {
+        this.viewCount++;
+        this.lastReviewedAt = lastReviewedAt;
+    }
+
+    public void bookmarkTerm() {
+        this.isSaved = true;
+    }
 }
