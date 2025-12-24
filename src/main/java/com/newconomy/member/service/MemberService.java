@@ -6,9 +6,13 @@ import com.newconomy.member.domain.Member;
 import com.newconomy.member.dto.MemberRequestDTO;
 import com.newconomy.member.dto.MemberResponseDTO;
 import com.newconomy.member.repository.MemberRepository;
+import com.newconomy.member.repository.MemberTermRepository;
+import com.newconomy.term.dto.TermResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberTermRepository memberTermRepository;
 
     public MemberResponseDTO.MemberProfileDTO getMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -53,5 +58,17 @@ public class MemberService {
                 .level(member.getLevel())
                 .total_points(member.getTotalPoints())
                 .build();
+    }
+
+    public List<TermResponseDTO.SingleTermResultDTO> getLearnedTerm(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return memberTermRepository.findAllByMember(member).stream()
+                .map(mt -> TermResponseDTO.SingleTermResultDTO.builder()
+                        .termId(mt.getTerm().getId())
+                        .termName(mt.getTerm().getTermName())
+                        .build())
+                .toList();
     }
 }
