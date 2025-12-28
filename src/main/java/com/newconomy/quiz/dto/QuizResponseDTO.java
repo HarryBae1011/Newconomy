@@ -18,16 +18,28 @@ public class QuizResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class QuizResponseDto{
+    public static class QuizListResponseDto{
+        List<QuizGenerateResponseDTO> quizList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class QuizGenerateResponseDTO{
         String quizType;
         String question;
         String correctAnswer;
         String explanation;
         int difficultyLevel;
-        List<QuizOptionResposneDto> quizOptionList;
+        List<QuizOptionResposneDTO> quizOptionList;
     }
 
-    public static class QuizOptionResposneDto{
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class QuizOptionResposneDTO{
         String optionText;
         int optionOrder;
         boolean isCorrect;
