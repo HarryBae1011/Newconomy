@@ -49,4 +49,16 @@ public class NewsController {
                         .newsDTOList(singleNewsDTOList)
                         .build());
     }
+
+    @GetMapping("/headline")
+    @Operation(summary = "네이버 경제 뉴스 헤드라인 검색", description = "네이버 경제 뉴스 헤드라인을 검색후 각 기사의 원문까지 크롤링하여 저장, 경제 뉴스 하위 카테고리별로도 검색 가능")
+    public ApiResponse<NewsResponseDTO.NewsListViewDTO> searchHeadLineNews(
+            @RequestParam(value = "newsCategory", required = false) String newsCategory
+    ) {
+        List<NewsResponseDTO.SingleNewsDTO> singleNewsDTOList = newsService.searchHeadLineNews(newsCategory);
+        return ApiResponse.onSuccess(
+                NewsResponseDTO.NewsListViewDTO.builder()
+                        .newsDTOList(singleNewsDTOList)
+                        .build());
+    }
 }
