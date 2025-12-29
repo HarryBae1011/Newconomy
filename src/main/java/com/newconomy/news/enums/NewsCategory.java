@@ -10,6 +10,7 @@ import java.util.Arrays;
 @Getter
 @AllArgsConstructor
 public enum NewsCategory {
+    MAIN("경제"),
     FINANCE("금융"),
     STOCK("증권"),
     INDUSTRY("산업/재계"),
@@ -17,7 +18,9 @@ public enum NewsCategory {
     REAL_ESTATE("부동산"),
     GLOBAL_ECONOMY("글로벌 경제"),
     LIFE("생활경제"),
-    NORMAL("경제 일반");
+    NORMAL("경제 일반"),
+    CUSTOM("사용자 검색")
+    ;
 
     private final String displayName;
 
