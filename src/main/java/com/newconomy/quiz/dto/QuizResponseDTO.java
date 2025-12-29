@@ -1,5 +1,6 @@
 package com.newconomy.quiz.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newconomy.quiz.domain.QuizOption;
 import com.newconomy.quiz.enums.QuizType;
 import jakarta.persistence.*;
@@ -42,6 +43,7 @@ public class QuizResponseDTO {
     public static class QuizOptionResposneDTO{
         String optionText;
         int optionOrder;
+        @JsonProperty("isCorrect")
         boolean isCorrect;
     }
 }
