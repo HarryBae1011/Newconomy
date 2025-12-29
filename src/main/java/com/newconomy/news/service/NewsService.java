@@ -78,7 +78,7 @@ public class NewsService {
                     .get();
 
             // 네이버 뉴스 헤드라인 선택자
-            Elements newsElements = doc.select("div.sa_text");
+            Elements newsElements = doc.select("li.sa_item");
 
             // 가져올 기사 개수 (기본 10개)
             int limit = Math.min(10, newsElements.size());
@@ -88,6 +88,8 @@ public class NewsService {
 
                 // 제목과 URL
                 Element titleLink = newsElement.selectFirst("a.sa_text_title");
+                // 이미지
+                Element img = newsElement.selectFirst("img._LAZY_LOADING");
                 // 요약
                 Element lede = newsElement.selectFirst("div.sa_text_lede");
                 // 언론사
@@ -96,6 +98,7 @@ public class NewsService {
                 if (titleLink != null) {
                     String title = titleLink.text();
                     String naverUrl = titleLink.attr("abs:href");
+                    String newsImgUrl = img != null ? img.attr("abs:data-src") : null;
                     String summary = lede != null ? lede.text() : "";
                     String source = press != null ? press.text() : "";
 
@@ -103,6 +106,7 @@ public class NewsService {
                     News news = News.builder()
                             .title(title)
                             .content(summary)
+                            .newsImgUrl(newsImgUrl)
                             .newsCategory(category)
                             .source(source)
                             .url(naverUrl)
