@@ -32,7 +32,7 @@ public class QuizGenerateService {
 
         QuizResponseDTO.QuizListResponseDto responseDto = webClient.post()
                 .uri("/api/quiz/generate")
-                .bodyValue(new QuizRequestDTO.QuizRequestDto(news.getId(), news.getContent()))
+                .bodyValue(new QuizRequestDTO.QuizRequestDto(news.getId(), news.getFullContent()))
                 .retrieve()
                 .bodyToMono(QuizResponseDTO.QuizListResponseDto.class)
                 .block();
