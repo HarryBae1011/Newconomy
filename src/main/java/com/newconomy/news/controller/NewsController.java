@@ -8,10 +8,7 @@ import com.newconomy.news.service.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,20 +31,28 @@ public class NewsController {
     }
 
     @GetMapping
-    @Operation(summary = "경제 뉴스 조회", description = "경제 뉴스 목록 조회 API, 뉴스 카테고리별로 조회 가능")
+    @Operation(summary = "경제 뉴스 목록 조회", description = "경제 뉴스 목록 조회 API, 뉴스 카테고리별로 조회 가능")
     public ApiResponse<NewsResponseDTO.NewsListViewDTO> viewAllNews(
             @RequestParam(value = "newsCategory", required = false) String category
     ) {
         // 뉴스 카테고리 필터링이 들어왔는지 확인
         NewsCategory newsCategory = category != null
-                ? NewsCategory.toNewsCategory(category)
-                : null;
+                ? NewsCategory.toNewsCategory(category.trim())
+                : NewsCategory.MAIN;
 
         List<NewsResponseDTO.SingleNewsDTO> singleNewsDTOList = newsService.viewNews(newsCategory);
         return ApiResponse.onSuccess(
                 NewsResponseDTO.NewsListViewDTO.builder()
                         .newsDTOList(singleNewsDTOList)
                         .build());
+    }
+
+    @GetMapping("/{newsId}")
+    @Operation(summary = "단일 뉴스 상세 조회", description = "단일 뉴스 상세 조회 API")
+    public ApiResponse<NewsResponseDTO.SingleNewsViewDTO> viewSingleNews(
+            @PathVariable("newsId") Long newsId) {
+        NewsResponseDTO.SingleNewsViewDTO singleNewsViewDTO = newsService.viewSingleNews(newsId);
+        return ApiResponse.onSuccess(singleNewsViewDTO);
     }
 
     @GetMapping("/headline")

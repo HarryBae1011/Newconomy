@@ -4,6 +4,7 @@ import com.newconomy.global.error.exception.handler.GeneralHandler;
 import com.newconomy.global.response.status.ErrorStatus;
 import com.newconomy.news.domain.News;
 import com.newconomy.news.repository.NewsRepository;
+import com.newconomy.term.service.TermExtractService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NewsCrawlingService {
 
     private final NewsRepository newsRepository;
+    private final TermExtractService termExtractService;
 
     // 뉴스 기사 원문 크롤링 (비동기, 딜레이)
     @Async
@@ -40,6 +42,9 @@ public class NewsCrawlingService {
             String content = extractNaverNewsContent(doc);
 
             if (content != null) {
+                // 뉴스 본문에서 경제 용어 추출
+                termExtractService.extract(newsId, content);
+
                 news.updateFullContent(content);
                 newsRepository.save(news);
             }
