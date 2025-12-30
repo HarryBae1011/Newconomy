@@ -35,6 +35,8 @@ public class EconomicTermTrie {
     }
 
     public Collection<Emit> parse(String text) {
+        // Trie에 등록된 모든 경제 용어를 대상으로 들어온 text 전체를 검색
+        // 키워드 끝에 도달하면 (경제 용어가 검색되면) Emit 생성
         return trie.parseText(text);
     }
 
