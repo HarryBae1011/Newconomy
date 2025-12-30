@@ -61,10 +61,8 @@ public class TermExtractService {
     }
 
     private String normalizeText(String fullContent) {
-        return fullContent
-                .replaceAll("[^가-힣a-zA-Z0-9%\\\\. ]", " ")
-                .replaceAll("\\s+", " ")
-                .trim();
+        // 모든 특수문자를 공백 1개로 1대1로 치환 (원문과 index 정확히 일치하도록)
+        return fullContent.replaceAll("[^가-힣a-zA-Z0-9%.\\s]", " ");
     }
 
 }
