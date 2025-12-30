@@ -40,6 +40,21 @@ public class NewsService {
         return newsRepository.searchNews(limit, newsCategory);
     }
 
+    public NewsResponseDTO.SingleNewsViewDTO viewSingleNews(Long newsId) {
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_NOT_FOUND));
+
+        return NewsResponseDTO.SingleNewsViewDTO.builder()
+                .newsId(news.getId())
+                .title(news.getTitle())
+                .fullContent(news.getFullContent())
+                .newsImgUrl(news.getNewsImgUrl())
+                .newsCategory(news.getNewsCategory())
+                .source(news.getSource())
+                .publishedAt(news.getPublishedAt())
+                .build();
+    }
+
     @Transactional
     public List<NewsResponseDTO.SingleNewsDTO> searchHeadLineNews(String newsCategory) {
         // 기사 헤드라인을 가져올 url

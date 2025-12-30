@@ -1,7 +1,9 @@
 package com.newconomy.news.dto;
 
+import com.newconomy.news.enums.NewsCategory;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class NewsResponseDTO {
@@ -47,5 +49,19 @@ public class NewsResponseDTO {
         private String title;
         private String url;
         private String originalUrl;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SingleNewsViewDTO {
+        private Long newsId;
+        private String title;
+        private String fullContent;
+        private String newsImgUrl;
+        private NewsCategory newsCategory;
+        private String source;
+        private LocalDateTime publishedAt;
     }
 }
