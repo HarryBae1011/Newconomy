@@ -3,13 +3,17 @@ package com.newconomy.quiz.controller;
 import com.newconomy.global.response.ApiResponse;
 import com.newconomy.quiz.domain.Quiz;
 import com.newconomy.quiz.dto.QuizRequestDTO;
+import com.newconomy.quiz.dto.QuizResponseDTO;
 import com.newconomy.quiz.service.QuizGenerateService;
+import com.newconomy.quiz.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class QuizController {
 
     private final QuizGenerateService quizGenerateService;
+    private final QuizService quizService;
 
     @Operation(summary = "해당 뉴스의 퀴즈 생성", description = "퀴즈 생성 API, fastapi서버의 upstage api를 호출합니다 / QuizId를 List로 반환")
     @PostMapping("/generate/{newsId}")
@@ -26,4 +31,44 @@ public class QuizController {
         List<Long> quizIds = quizGenerateService.generateQuiz(newsId);
         return ApiResponse.onSuccess(quizIds);
     }
+
+//    @Operation(summary = "퀴즈 목록 조회")
+//    @GetMapping("/quiz")
+//    public ApiResponse<Page<QuizResponseDTO.QuizGenerateResponseDTO>> getQuizzes(@RequestParam(defaultValue = "0") int page,
+//                                                                                 @RequestParam(defaultValue = "10") int size
+//    ) {
+//        Pageable pageable = PageRequest.of(page,size, Sort.by("createdAt").descending());
+//        return ApiResponse.onSuccess(quizService.getQuizzes(pageable));
+//    }
+
+//    @Operation(summary = "퀴즈 상세 조회")
+//    @GetMapping("/quiz/{quizId}")
+//    public ApiResponse<Object> getQuiz(@PathVariable Long quizId) {
+//        // return ApiResponse.onSuccess(quizService.getQuiz(quizId));
+//        return ApiResponse.onSuccess("퀴즈 상세 조회: " + quizId);
+//    }
+
+    @Operation(summary = "퀴즈 답안 제출")
+    @PostMapping("/quiz/{quizId}/submit")
+    public ApiResponse<Object> submitQuiz(@PathVariable Long quizId,
+                                          @RequestBody QuizRequestDTO.SubmitDTO submitDto,
+                                          @AuthenticationPrincipal Long memberId) {
+
+        return ApiResponse.onSuccess(quizService.submitAnswer(quizId,memberId,submitDto));
+    }
+
+//    @Operation(summary = "퀴즈 풀이 기록 조회")
+//    @GetMapping("/member/{memberId}/quiz/attempt")
+//    public ApiResponse<Object> getQuizAttempts(@PathVariable Long memberId) {
+//        // return ApiResponse.onSuccess(quizService.getQuizAttempts(memberId));
+//        return ApiResponse.onSuccess("풀이 기록 조회: " + memberId);
+//    }
+//
+//    @Operation(summary = "틀린 퀴즈 목록 조회")
+//    @GetMapping("/member/{memberId}/quiz/wrong")
+//    public ApiResponse<Object> getWrongQuizzes(@PathVariable Long memberId) {
+//        // return ApiResponse.onSuccess(quizService.getWrongQuizzes(memberId));
+//        return ApiResponse.onSuccess("틀린 퀴즈 조회: " + memberId);
+//    }
+
 }
