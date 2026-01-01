@@ -4,10 +4,13 @@ import com.newconomy.global.error.exception.handler.GeneralHandler;
 import com.newconomy.global.response.status.ErrorStatus;
 import com.newconomy.news.crawling.NewsCrawlingService;
 import com.newconomy.news.domain.News;
+import com.newconomy.news.domain.NewsTerm;
 import com.newconomy.news.dto.NewsResponseDTO;
 import com.newconomy.news.enums.NewsCategory;
 import com.newconomy.news.properties.NaverNewsProperties;
 import com.newconomy.news.repository.NewsRepository;
+import com.newconomy.news.repository.NewsTermRepository;
+import com.newconomy.term.dto.TermResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -33,6 +36,7 @@ public class NewsService {
     private final NaverNewsProperties naverNewsProperties;
     private final NewsRepository newsRepository;
     private final NewsCrawlingService newsCrawlingService;
+    private final NewsTermRepository newsTermRepository;
 
     public List<NewsResponseDTO.SingleNewsDTO> viewNews(NewsCategory newsCategory) {
         Pageable limit =  PageRequest.of(0, 10);
@@ -154,6 +158,21 @@ public class NewsService {
                         .title(n.getTitle())
                         .url(n.getUrl())
                         .originalUrl(n.getOriginalUrl())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    public List<TermResponseDTO.SingleTermResultDTO> viewNewsTerms(Long newsId) {
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_NOT_FOUND));
+
+        List<NewsTerm> newsTermList = newsTermRepository.findAllByNews(news);
+
+        return newsTermList.stream()
+                .map(nt -> TermResponseDTO.SingleTermResultDTO.builder()
+                        .termId(nt.getTerm().getId())
+                        .termName(nt.getTerm().getTermName())
                         .build()
                 )
                 .collect(Collectors.toList());
