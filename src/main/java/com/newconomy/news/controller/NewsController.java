@@ -5,6 +5,7 @@ import com.newconomy.news.crawling.SearchService;
 import com.newconomy.news.dto.NewsResponseDTO;
 import com.newconomy.news.enums.NewsCategory;
 import com.newconomy.news.service.NewsService;
+import com.newconomy.term.dto.TermResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,18 @@ public class NewsController {
         return ApiResponse.onSuccess(
                 NewsResponseDTO.NewsListViewDTO.builder()
                         .newsDTOList(singleNewsDTOList)
+                        .build());
+    }
+
+    @GetMapping("/{newsId}/term")
+    @Operation(summary = "뉴스 경제 용어 목록 조회", description = "뉴스 기사 원문에 등장한 경제 용어 목록 조회 API")
+    public ApiResponse<TermResponseDTO.TermResultListDTO> viewNewsTerms(
+            @PathVariable("newsId") Long newsId
+    ) {
+        List<TermResponseDTO.SingleTermResultDTO> singleTermResultDTOList = newsService.viewNewsTerms(newsId);
+        return ApiResponse.onSuccess(
+                TermResponseDTO.TermResultListDTO.builder()
+                        .terms(singleTermResultDTOList)
                         .build());
     }
 }
