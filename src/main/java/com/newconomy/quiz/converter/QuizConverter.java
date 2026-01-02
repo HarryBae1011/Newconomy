@@ -1,8 +1,8 @@
 package com.newconomy.quiz.converter;
 
 import com.newconomy.quiz.domain.Quiz;
+import com.newconomy.quiz.domain.QuizAttempt;
 import com.newconomy.quiz.domain.QuizOption;
-import com.newconomy.quiz.dto.QuizRequestDTO;
 import com.newconomy.quiz.dto.QuizResponseDTO;
 import com.newconomy.quiz.enums.QuizType;
 
@@ -31,12 +31,44 @@ public class QuizConverter {
         return quiz;
     }
 
+    public static QuizResponseDTO.QuizGenerateResponseDTO toQuizDTO(Quiz quiz){
+        return QuizResponseDTO.QuizGenerateResponseDTO.builder()
+                .id(quiz.getId())
+                .quizType(quiz.getQuizType().toString())
+                .difficultyLevel(quiz.getDifficultyLevel())
+                .correctAnswer(quiz.getCorrectAnswer())
+                .explanation(quiz.getExplanation())
+                .question(quiz.getQuestion())
+                .quizOptionList(quiz.getQuizOptionList().stream().map(QuizConverter::toQuizOptionDTO).toList())
+                .build();
+    }
+
     public static QuizOption toQuizOptionEntity(QuizResponseDTO.QuizOptionResposneDTO dto, Quiz quiz) {
         return QuizOption.builder()
                 .optionText(dto.getOptionText())
                 .optionOrder(dto.getOptionOrder())
                 .isCorrect(dto.isCorrect())
                 .quiz(quiz) // 부모 엔티티 참조 설정 (FK)
+                .build();
+    }
+
+    public static QuizResponseDTO.QuizOptionResposneDTO toQuizOptionDTO(QuizOption quizOption){
+        return QuizResponseDTO.QuizOptionResposneDTO.builder()
+                .optionOrder(quizOption.getOptionOrder())
+                .optionText(quizOption.getOptionText())
+                .isCorrect(quizOption.isCorrect())
+                .build();
+    }
+
+    public static QuizResponseDTO.SubmitResultDTO toSubmitResultDTO(QuizAttempt quizAttempt){
+        Quiz quiz = quizAttempt.getQuiz();
+        return QuizResponseDTO.SubmitResultDTO.builder()
+                .quizId(quiz.getId())
+                .quizAttemptId(quizAttempt.getId())
+                .correctAnswer(quiz.getCorrectAnswer())
+                .explanation(quiz.getExplanation())
+                .isCorrect(quizAttempt.isCorrect())
+                .memberAnswer(quizAttempt.getMemberAnswer())
                 .build();
     }
 }

@@ -1,0 +1,57 @@
+package com.newconomy.quiz.service;
+
+import com.newconomy.global.error.exception.GeneralException;
+import com.newconomy.global.response.status.ErrorStatus;
+import com.newconomy.member.domain.Member;
+import com.newconomy.member.repository.MemberRepository;
+import com.newconomy.quiz.converter.QuizConverter;
+import com.newconomy.quiz.domain.Quiz;
+import com.newconomy.quiz.domain.QuizAttempt;
+import com.newconomy.quiz.dto.QuizRequestDTO;
+import com.newconomy.quiz.dto.QuizResponseDTO;
+import com.newconomy.quiz.repository.QuizAttemptRepository;
+import com.newconomy.quiz.repository.QuizRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class QuizService {
+
+    private final QuizRepository quizRepository;
+    private final MemberRepository memberRepository;
+    private final QuizAttemptRepository quizAttemptRepository;
+
+//    public Page<QuizResponseDTO.QuizGenerateResponseDTO> getQuizzes(Pageable pageable){
+//        Page<Quiz> allQuizzes = quizRepository.findAll(pageable);
+//
+//        return allQuizzes.map(QuizConverter::toQuizDTO);
+//    }
+
+    @Transactional
+    public QuizResponseDTO.SubmitResultDTO submitAnswer(Long quizId, Long memberId, QuizRequestDTO.SubmitDTO request){
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(
+                () -> new GeneralException(ErrorStatus.QUIZ_NOT_FOUND));
+
+        boolean isCorrect = request.getMemberAnswer().equals(quiz.getCorrectAnswer());
+
+        QuizAttempt quizAttempt = QuizAttempt.builder()
+                .member(member)
+                .quiz(quiz)
+                .memberAnswer(request.getMemberAnswer())
+                .attemptedAt(LocalDateTime.now())
+                .isCorrect(isCorrect)
+                .build();
+        QuizAttempt saved = quizAttemptRepository.save(quizAttempt);
+        return QuizConverter.toSubmitResultDTO(saved);
+    }
+
+}
