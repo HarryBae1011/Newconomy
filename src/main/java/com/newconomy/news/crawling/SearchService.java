@@ -46,7 +46,8 @@ public class SearchService {
                 .map(i -> News.builder()
                         .title(HtmlUtils.removeHtmlTags(i.getTitle()))
                         .content(HtmlUtils.removeHtmlTags(i.getDescription()))
-                        .newsCategory(NewsCategory.toNewsCategory(query))
+                        // 사용자 검색으로 크롤링된 기사는 CUSTOM 카테고리로 저장
+                        .newsCategory(NewsCategory.CUSTOM)
                         .source("NAVER")
                         .url(i.getLink())
                         .originalUrl(i.getOriginallink())

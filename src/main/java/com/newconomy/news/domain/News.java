@@ -28,10 +28,12 @@ public class News extends BaseEntity {
     @Lob
     private String fullContent;
 
+    private String newsImgUrl;
+
     @Enumerated(value = EnumType.STRING)
     private NewsCategory newsCategory;
 
-    //언론사 ex) 네이버, 다음 등...
+    //언론사 ex) 국민일보, 해럴드경제 등...
     @Column(nullable = false)
     private String source;
 

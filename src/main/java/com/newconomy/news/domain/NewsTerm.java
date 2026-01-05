@@ -23,5 +23,9 @@ public class NewsTerm extends BaseEntity {
     @JoinColumn(name = "term_id")
     private Term term;
 
+    // 뉴스 기사 전체 기준 위치
+    private int startIndex;
+    private int endIndex;
+
     private String contextSentence;
 }

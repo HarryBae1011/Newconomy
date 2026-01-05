@@ -7,12 +7,17 @@ import com.newconomy.member.service.MemberService;
 import com.newconomy.quiz.dto.QuizResponseDTO;
 import com.newconomy.quiz.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
+import com.newconomy.term.dto.TermResponseDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Tag(name = "멤버 컨트롤러")
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
@@ -53,5 +58,14 @@ public class MemberController {
                                                @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return ApiResponse.onSuccess(quizService.getWrongQuizzes(memberId,pageable));
+    @GetMapping("/{memberId}/term")
+    public ApiResponse<TermResponseDTO.TermResultListDTO> viewLearnedTerm(
+            @PathVariable Long memberId
+    ) {
+        List<TermResponseDTO.SingleTermResultDTO> learnedTerm = memberService.getLearnedTerm(memberId);
+        return ApiResponse.onSuccess(
+                TermResponseDTO.TermResultListDTO.builder()
+                        .terms(learnedTerm)
+                        .build());
     }
 }

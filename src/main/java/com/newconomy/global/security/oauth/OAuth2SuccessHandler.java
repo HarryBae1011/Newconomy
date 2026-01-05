@@ -34,8 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         );
 
         String redirectUrl = UriComponentsBuilder.fromUriString(
-//                "http://localhost:3000/auth/callback"
-                "http://localhost:8080/social-login-test.html")
+                "http://localhost:3000/oauth/callback")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
