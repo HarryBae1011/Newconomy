@@ -40,6 +40,16 @@ public class TermResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class BriefSingleTermDTO {
+        private Long termId;
+        private String termName;
+        private String briefExplanation;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class TermAutocompleteListDTO {
         private List<TermAutocompleteDTO> terms;
     }

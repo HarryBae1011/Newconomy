@@ -17,7 +17,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +37,7 @@ public class NewsService {
     private final NewsCrawlingService newsCrawlingService;
     private final NewsTermRepository newsTermRepository;
 
-    public List<NewsResponseDTO.SingleNewsDTO> viewNews(NewsCategory newsCategory) {
-        Pageable limit =  PageRequest.of(0, 10);
-
+    public List<NewsResponseDTO.SingleNewsDTO> viewNews(NewsCategory newsCategory, Pageable limit) {
         return newsRepository.searchNews(limit, newsCategory);
     }
 
