@@ -9,6 +9,7 @@ import com.newconomy.term.dto.TermResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,14 +35,16 @@ public class NewsController {
     @GetMapping
     @Operation(summary = "경제 뉴스 목록 조회", description = "경제 뉴스 목록 조회 API, 뉴스 카테고리별로 조회 가능")
     public ApiResponse<NewsResponseDTO.NewsListViewDTO> viewAllNews(
-            @RequestParam(value = "newsCategory", required = false) String category
+            @RequestParam(value = "newsCategory", required = false) String category,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         // 뉴스 카테고리 필터링이 들어왔는지 확인
         NewsCategory newsCategory = category != null
                 ? NewsCategory.toNewsCategory(category.trim())
                 : NewsCategory.MAIN;
 
-        List<NewsResponseDTO.SingleNewsDTO> singleNewsDTOList = newsService.viewNews(newsCategory);
+        List<NewsResponseDTO.SingleNewsDTO> singleNewsDTOList = newsService.viewNews(newsCategory, PageRequest.of(page, size));
         return ApiResponse.onSuccess(
                 NewsResponseDTO.NewsListViewDTO.builder()
                         .newsDTOList(singleNewsDTOList)
