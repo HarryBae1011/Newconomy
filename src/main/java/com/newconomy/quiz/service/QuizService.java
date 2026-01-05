@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,18 @@ public class QuizService {
 //
 //        return allQuizzes.map(QuizConverter::toQuizDTO);
 //    }
+
+    public Page<QuizResponseDTO.SubmitResultDTO> getQuizAttempts(Long memberId, Pageable pageable){
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Page<QuizAttempt> quizAttempts = quizAttemptRepository.findByMember(member, pageable);
+        return quizAttempts.map(QuizConverter::toSubmitResultDTO);
+    }
+
+    public Page<QuizResponseDTO.SubmitResultDTO> getWrongQuizzes(Long memberId, Pageable pageable){
+        Page<QuizAttempt> quizAttempts = quizAttemptRepository.findWrongQuizzesByMemberId(memberId, pageable);
+        return quizAttempts.map(QuizConverter::toSubmitResultDTO);
+    }
 
     @Transactional
     public QuizResponseDTO.SubmitResultDTO submitAnswer(Long quizId, Long memberId, QuizRequestDTO.SubmitDTO request){

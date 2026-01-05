@@ -49,26 +49,12 @@ public class QuizController {
 //    }
 
     @Operation(summary = "퀴즈 답안 제출")
-    @PostMapping("/quiz/{quizId}/submit")
-    public ApiResponse<Object> submitQuiz(@PathVariable Long quizId,
+    @PostMapping("/{quizId}/submit")
+    public ApiResponse<QuizResponseDTO.SubmitResultDTO> submitQuiz(@PathVariable Long quizId,
                                           @RequestBody QuizRequestDTO.SubmitDTO submitDto,
                                           @AuthenticationPrincipal Long memberId) {
 
         return ApiResponse.onSuccess(quizService.submitAnswer(quizId,memberId,submitDto));
     }
-
-//    @Operation(summary = "퀴즈 풀이 기록 조회")
-//    @GetMapping("/member/{memberId}/quiz/attempt")
-//    public ApiResponse<Object> getQuizAttempts(@PathVariable Long memberId) {
-//        // return ApiResponse.onSuccess(quizService.getQuizAttempts(memberId));
-//        return ApiResponse.onSuccess("풀이 기록 조회: " + memberId);
-//    }
-//
-//    @Operation(summary = "틀린 퀴즈 목록 조회")
-//    @GetMapping("/member/{memberId}/quiz/wrong")
-//    public ApiResponse<Object> getWrongQuizzes(@PathVariable Long memberId) {
-//        // return ApiResponse.onSuccess(quizService.getWrongQuizzes(memberId));
-//        return ApiResponse.onSuccess("틀린 퀴즈 조회: " + memberId);
-//    }
 
 }
