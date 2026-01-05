@@ -58,6 +58,8 @@ public class MemberController {
                                                @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return ApiResponse.onSuccess(quizService.getWrongQuizzes(memberId,pageable));
+    }
+
     @GetMapping("/{memberId}/term")
     public ApiResponse<TermResponseDTO.TermResultListDTO> viewLearnedTerm(
             @PathVariable Long memberId
