@@ -45,6 +45,13 @@ public class TermController {
                         .build());
     }
 
+    @GetMapping("/{termId}/brief")
+    @Operation(summary = "특정 경제 용어 간단 조회", description = "경제 용어에 대한 간단한 설명을 조회하는 API")
+    public ApiResponse<TermResponseDTO.BriefSingleTermDTO> viewBriefSingleTerm(@PathVariable Long termId) {
+        TermResponseDTO.BriefSingleTermDTO briefSingleTerm = termService.getBriefSingleTerm(termId);
+        return ApiResponse.onSuccess(briefSingleTerm);
+    }
+
     @GetMapping("/autocomplete")
     @Operation(summary = "경제 용어 자동완성 검색", description = "입력한 키워드로 경제 용어를 검색하는 API")
     public ApiResponse<TermResponseDTO.TermAutocompleteListDTO> autoComplete(

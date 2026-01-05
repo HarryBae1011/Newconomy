@@ -73,6 +73,17 @@ public class TermService {
         return term;
     }
 
+    public TermResponseDTO.BriefSingleTermDTO getBriefSingleTerm(Long termId) {
+        Term term = termRepository.findById(termId)
+                .orElseThrow(() -> new GeneralHandler(ErrorStatus.TERM_NOT_FOUND));
+
+        return TermResponseDTO.BriefSingleTermDTO.builder()
+                .termId(term.getId())
+                .termName(term.getTermName())
+                .briefExplanation(term.getDetailedExplanation()) // 추후에 간단한 설명으로 바꿔야함
+                .build();
+    }
+
     public List<TermResponseDTO.TermAutocompleteDTO> autocomplete(String keyword) {
         // keyword로 null이나 공백이 들어오면 빈 리스트 반환
         if (keyword == null || keyword.trim().isEmpty())
