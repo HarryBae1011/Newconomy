@@ -3,8 +3,10 @@ package com.newconomy.quiz.converter;
 import com.newconomy.quiz.domain.Quiz;
 import com.newconomy.quiz.domain.QuizAttempt;
 import com.newconomy.quiz.domain.QuizOption;
+import com.newconomy.quiz.dto.QuizRequestDTO;
 import com.newconomy.quiz.dto.QuizResponseDTO;
 import com.newconomy.quiz.enums.QuizType;
+import com.newconomy.term.domain.Term;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,15 @@ public class QuizConverter {
                 .explanation(quiz.getExplanation())
                 .isCorrect(quizAttempt.isCorrect())
                 .memberAnswer(quizAttempt.getMemberAnswer())
+                .build();
+    }
+
+    public static QuizRequestDTO.QuizGenerateByTermRequestDTO toQuizGenerateByTermDTO(Term term){
+        return QuizRequestDTO.QuizGenerateByTermRequestDTO.builder()
+                .termId(term.getId())
+                .termName(term.getTermName())
+                .simpleExplanation(term.getSimpleExplanation())
+                .detailedExplanation(term.getDetailedExplanation())
                 .build();
     }
 }
