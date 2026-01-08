@@ -27,4 +27,16 @@ public class QuizRequestDTO {
         @NotNull
         String memberAnswer;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "경제 용어 기반 퀴즈 생성 요청 DTO")
+    public static class QuizGenerateByTermRequestDTO{
+        Long termId;
+        String termName;
+        String simpleExplanation;
+        String detailedExplanation;
+    }
 }
