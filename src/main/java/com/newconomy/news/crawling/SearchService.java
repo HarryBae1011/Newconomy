@@ -61,7 +61,7 @@ public class SearchService {
 
         // 비동기로 뉴스 기사 원문 크롤링 및 경제 용어 추출
         newsList.forEach(
-                news -> newsCrawlingService.crawlFullContent(news.getId())
+                news -> newsCrawlingService.crawlFullContent(news.getId(), news.getUrl())
         );
         return newsItemsResponseDTO;
     }
