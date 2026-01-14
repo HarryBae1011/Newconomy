@@ -37,7 +37,7 @@ public class NewsController {
     public ApiResponse<NewsResponseDTO.NewsListViewDTO> viewAllNews(
             @RequestParam(value = "newsCategory", required = false) String category,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "12") int size
     ) {
         // 뉴스 카테고리 필터링이 들어왔는지 확인
         NewsCategory newsCategory = category != null
