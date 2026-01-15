@@ -25,15 +25,12 @@ public class NewsCrawlingService {
     // 뉴스 기사 원문 크롤링 (비동기, 딜레이)
     @Async
     @Transactional
-    public void crawlFullContent(Long newsId) {
-        News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_NOT_FOUND));
-
+    public void crawlFullContent(Long newsId, String url) {
         try {
             Thread.sleep(2000);
 
             // 기사 원문 페이지 HTML 가져오기
-            Document doc = Jsoup.connect(news.getUrl())
+            Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0")
                     .timeout(5000)
                     .get();
@@ -45,11 +42,17 @@ public class NewsCrawlingService {
                 // 뉴스 본문에서 경제 용어 추출
                 termExtractService.extract(newsId, content);
 
+                News news = newsRepository.findById(newsId)
+                        .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_NOT_FOUND));
+
                 news.updateFullContent(content);
                 newsRepository.save(news);
             }
 
         } catch (Exception e) {
+            News news = newsRepository.findById(newsId)
+                    .orElseThrow(() -> new GeneralHandler(ErrorStatus.NEWS_NOT_FOUND));
+
             log.error("크롤링 실패: {}", news.getOriginalUrl(), e);
         }
     }

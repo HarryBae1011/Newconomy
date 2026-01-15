@@ -141,7 +141,7 @@ public class NewsService {
 
             // 비동기로 각 기사의 원문 크롤링
             newsList.forEach(
-                    news -> newsCrawlingService.crawlFullContent(news.getId())
+                    news -> newsCrawlingService.crawlFullContent(news.getId(), news.getUrl())
             );
 
         } catch (Exception e) {
