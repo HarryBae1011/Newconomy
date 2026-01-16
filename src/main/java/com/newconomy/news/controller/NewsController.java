@@ -5,6 +5,7 @@ import com.newconomy.news.crawling.SearchService;
 import com.newconomy.news.dto.NewsResponseDTO;
 import com.newconomy.news.enums.NewsCategory;
 import com.newconomy.news.service.NewsService;
+import com.newconomy.news.service.NewsTermGenerateService;
 import com.newconomy.term.dto.TermResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ public class NewsController {
 
     private final SearchService searchService;
     private final NewsService newsService;
+    private final NewsTermGenerateService newsTermGenerateService;
 
     @GetMapping("/search")
     @Operation(summary = "경제 뉴스 검색", description = "경제 뉴스를 크롤링 해오는 API 입니다.")
@@ -76,6 +78,8 @@ public class NewsController {
     public ApiResponse<TermResponseDTO.TermResultListDTO> viewNewsTerms(
             @PathVariable("newsId") Long newsId
     ) {
+        NewsResponseDTO.NewsTermGenerateListDTO newsTermGenerateListDTO = newsTermGenerateService.generateNewsTerm(newsId);
+
         List<TermResponseDTO.SingleTermResultDTO> singleTermResultDTOList = newsService.viewNewsTerms(newsId);
         return ApiResponse.onSuccess(
                 TermResponseDTO.TermResultListDTO.builder()
