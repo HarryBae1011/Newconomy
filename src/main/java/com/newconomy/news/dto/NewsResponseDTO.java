@@ -1,6 +1,8 @@
 package com.newconomy.news.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newconomy.news.enums.NewsCategory;
+import com.newconomy.term.enums.TermCategory;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -64,4 +66,29 @@ public class NewsResponseDTO {
         private String source;
         private LocalDateTime publishedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class NewsTermGenerateListDTO{
+        @JsonProperty("terms")
+        List<NewsTermGenerateDTO> newsTermGenerateList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class NewsTermGenerateDTO{
+        String termName;
+        String simpleExplanation;
+        String detailedExplanation;
+        TermCategory termCategory;
+        int difficultyLevel;
+        int startIndex;
+        int endIndex;
+        String contextSentence;
+    }
+
 }
