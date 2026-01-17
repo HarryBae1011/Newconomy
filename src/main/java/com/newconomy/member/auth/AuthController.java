@@ -5,6 +5,7 @@ import com.newconomy.member.auth.dto.AuthRequestDTO;
 import com.newconomy.member.auth.dto.AuthResponseDTO;
 import com.newconomy.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "인증 컨트롤러")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "유저 로그인", description = "유저 로그인 성공시 JWT 토큰을 발급")
     public ApiResponse<AuthResponseDTO.LoginResponseDTO> login(@RequestBody AuthRequestDTO.LoginRequestDTO request) {
         AuthResponseDTO.LoginResponseDTO loginResponseDTO = authService.login(request);
         return ApiResponse.onSuccess(loginResponseDTO);
