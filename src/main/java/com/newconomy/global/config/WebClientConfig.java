@@ -19,9 +19,10 @@ public class WebClientConfig {
     public WebClient fastapiWebClient(){
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .responseTimeout(Duration.ofSeconds(15));
+                .responseTimeout(Duration.ofSeconds(60));
         return WebClient.builder()
-                .baseUrl("http://localhost:8000")
+                .baseUrl("http://fastapi:8000")
+                //.baseUrl("http://localhost:8000")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
