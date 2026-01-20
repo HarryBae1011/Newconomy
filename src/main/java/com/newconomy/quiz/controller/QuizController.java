@@ -7,6 +7,7 @@ import com.newconomy.quiz.dto.QuizResponseDTO;
 import com.newconomy.quiz.service.QuizGenerateService;
 import com.newconomy.quiz.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "퀴즈 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/quiz")
