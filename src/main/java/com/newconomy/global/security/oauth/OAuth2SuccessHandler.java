@@ -34,7 +34,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         );
 
         String redirectUrl = UriComponentsBuilder.fromUriString(
-                "http://localhost:3000/oauth/callback")
+                //"http://localhost:3000/oauth/callback"
+                        "https://newconomy.vercel.app/oauth/callback")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
