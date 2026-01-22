@@ -37,7 +37,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/",
-//                                "/api/**", //추후에 이건 없애야함
+                                "/api/**", //추후에 이건 없애야함
                                 "/api/auth/**",
                                 "/login/**",
                                 "/oauth2/**",
