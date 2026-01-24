@@ -78,12 +78,19 @@ public class NewsController {
     public ApiResponse<TermResponseDTO.TermResultListDTO> viewNewsTerms(
             @PathVariable("newsId") Long newsId
     ) {
-        NewsResponseDTO.NewsTermGenerateListDTO newsTermGenerateListDTO = newsTermGenerateService.generateNewsTerm(newsId);
-
         List<TermResponseDTO.SingleTermResultDTO> singleTermResultDTOList = newsService.viewNewsTerms(newsId);
         return ApiResponse.onSuccess(
                 TermResponseDTO.TermResultListDTO.builder()
                         .terms(singleTermResultDTOList)
                         .build());
+    }
+
+    @PostMapping("/{newsId}/generateTerm")
+    @Operation(summary = "뉴스 경제 용어 생성", description = "DB에 없지만 어려운 용어 생성 및 저장 API")
+    public ApiResponse<String> generateTermByLlm(
+            @PathVariable("newsId") Long newsId
+    ){
+        newsTermGenerateService.generateNewsTerm(newsId);
+        return ApiResponse.onSuccess("용어 생성이 완료되었습니다");
     }
 }
