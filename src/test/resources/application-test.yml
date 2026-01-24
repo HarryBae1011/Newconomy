@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    # 메모리(mem)에서 실행하겠다는 설정입니다. 설치가 필요 없습니다!
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop # 테스트 시작 시 테이블 만들고 끝날 때 지움
+    show-sql: true
