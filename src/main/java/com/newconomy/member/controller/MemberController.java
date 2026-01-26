@@ -27,6 +27,7 @@ public class MemberController {
     private final QuizService quizService;
 
     @GetMapping("/me/profile")
+    @Operation(summary = "본인 회원 정보 조회")
     public ApiResponse<MemberResponseDTO.MemberProfileDTO> getMemberProfile(
             @AuthenticationPrincipal Long memberId) {
         MemberResponseDTO.MemberProfileDTO memberProfileDTO = memberService.getMember(memberId);
@@ -34,6 +35,7 @@ public class MemberController {
     }
 
     @PatchMapping("/me/profile/edit")
+    @Operation(summary = "본인 회원 정보 수정")
     public ApiResponse<MemberResponseDTO.MemberProfileDTO> changeMemberProfile(
             @AuthenticationPrincipal Long memberId,
             @RequestBody MemberRequestDTO.ProfileChangeRequestDTO request) {
@@ -61,6 +63,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/term")
+    @Operation(summary = "본인이 공부한 경제 용어 조회", description = "사용자가 조회한 적이 있는 경제용어 목록 조회")
     public ApiResponse<TermResponseDTO.TermResultListDTO> viewLearnedTerm(
             @PathVariable Long memberId
     ) {
