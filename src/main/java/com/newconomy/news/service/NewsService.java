@@ -2,6 +2,7 @@ package com.newconomy.news.service;
 
 import com.newconomy.global.error.exception.handler.GeneralHandler;
 import com.newconomy.global.response.status.ErrorStatus;
+import com.newconomy.news.converter.NewsTermConverter;
 import com.newconomy.news.crawling.NewsCrawlingService;
 import com.newconomy.news.domain.News;
 import com.newconomy.news.domain.NewsTerm;
@@ -10,7 +11,10 @@ import com.newconomy.news.enums.NewsCategory;
 import com.newconomy.news.properties.NaverNewsProperties;
 import com.newconomy.news.repository.NewsRepository;
 import com.newconomy.news.repository.NewsTermRepository;
+import com.newconomy.term.converter.TermConverter;
+import com.newconomy.term.domain.Term;
 import com.newconomy.term.dto.TermResponseDTO;
+import com.newconomy.term.repository.TermRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -36,6 +40,7 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsCrawlingService newsCrawlingService;
     private final NewsTermRepository newsTermRepository;
+    private final TermRepository termRepository;
 
     public List<NewsResponseDTO.SingleNewsDTO> viewNews(NewsCategory newsCategory, Pageable limit) {
         return newsRepository.searchNews(limit, newsCategory);
@@ -173,5 +178,17 @@ public class NewsService {
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void saveNewsTerms(NewsResponseDTO.NewsTermGenerateListDTO responseDTO, News news) {
+        responseDTO.getNewsTermGenerateList().forEach(response -> {
+            Term term = termRepository.findByTermName(response.getTermName())
+                    .orElseGet(() -> termRepository.save(TermConverter.toTerm(response)));
+
+            if (!newsTermRepository.existsByNewsAndTerm(news, term)) {
+                newsTermRepository.save(NewsTermConverter.toNewsTerm(response, term, news));
+            }
+        });
     }
 }
