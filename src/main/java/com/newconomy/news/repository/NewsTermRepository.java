@@ -15,4 +15,6 @@ public interface NewsTermRepository extends JpaRepository<NewsTerm, Long> {
     List<NewsTerm> findAllByNews(@Param("news") News news);
 
     boolean existsByNewsAndTerm(News news, Term term);
+
+    boolean existsByNews(News news);
 }
