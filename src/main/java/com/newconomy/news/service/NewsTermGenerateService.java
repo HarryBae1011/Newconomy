@@ -25,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NewsTermGenerateService {
     private final NewsRepository newsRepository;
+    private final NewsTermRepository newsTermRepository;
     private final NewsService newsService;
     private final WebClient webClient;
 
@@ -32,6 +33,11 @@ public class NewsTermGenerateService {
     public void generateNewsTerm(Long newsId){
         News news = newsRepository.findById(newsId).orElseThrow(() ->
                 new EntityNotFoundException("뉴스를 찾을 수 없습니다"));
+
+        if (newsTermRepository.existsByNews(news)) {
+            log.info("NewsID: {} - 이미 분석된 용어가 존재하여 LLM 호출을 건너뜁니다.", newsId);
+            return;
+        }
 
         Map<String, String> body = Map.of("content", news.getFullContent());
 

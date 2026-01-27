@@ -91,6 +91,6 @@ public class NewsController {
             @PathVariable("newsId") Long newsId
     ){
         newsTermGenerateService.generateNewsTerm(newsId);
-        return ApiResponse.onSuccess("용어 생성이 완료되었습니다");
+        return ApiResponse.onSuccess("용어 생성이 시작되었습니다.");
     }
 }
