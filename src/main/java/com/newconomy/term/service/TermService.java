@@ -80,7 +80,7 @@ public class TermService {
         return TermResponseDTO.BriefSingleTermDTO.builder()
                 .termId(term.getId())
                 .termName(term.getTermName())
-                .briefExplanation(term.getDetailedExplanation()) // 추후에 간단한 설명으로 바꿔야함
+                .briefExplanation(term.getSimpleExplanation())
                 .build();
     }
 
