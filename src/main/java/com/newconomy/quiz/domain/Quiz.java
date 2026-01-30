@@ -25,10 +25,6 @@ public class Quiz extends BaseEntity {
     @JoinColumn(name = "news_id")
     private News news;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "term_id")
-    private Term term;
-
     @Enumerated(value = EnumType.STRING)
     private QuizType quizType;
 
@@ -41,6 +37,8 @@ public class Quiz extends BaseEntity {
 
     private String explanation;
     private int difficultyLevel;
+
+    private String batchId; //용어 퀴즈 생성 후 묶음 조회를 위해
 
     @Builder.Default
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
