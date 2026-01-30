@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuizConverter {
-    public static Quiz toQuizEntity(QuizResponseDTO.QuizGenerateResponseDTO dto, News news, Term term) {
+    public static Quiz toQuizEntity(QuizResponseDTO.QuizGenerateResponseDTO dto, News news, String batchId) {
         Quiz quiz = Quiz.builder()
                 .news(news)
-                .term(term)
+                .batchId(batchId)
                 .quizType(QuizType.valueOf(dto.getQuizType()))
                 .question(dto.getQuestion())
                 .correctAnswer(dto.getCorrectAnswer())

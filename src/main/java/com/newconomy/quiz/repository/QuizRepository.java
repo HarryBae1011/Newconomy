@@ -11,5 +11,8 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Query("select q from Quiz q left join fetch q.quizOptionList where q.news.id = :newsId")
     List<Quiz> findByNewsId(@Param("newsId") Long newsId);
 
+    @Query("select q from Quiz q left join fetch q.quizOptionList where q.batchId = :batchId")
+    List<Quiz> findByBatchId(@Param("batchId") String batchId);
+
     boolean existsByNewsId(Long newsId);
 }

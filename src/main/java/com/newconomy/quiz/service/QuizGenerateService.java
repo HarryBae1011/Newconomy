@@ -51,42 +51,31 @@ public class QuizGenerateService {
                 .bodyToMono(QuizResponseDTO.QuizListResponseDto.class)
                 .subscribe(response -> {
                     if (response != null && response.getQuizList() != null) {
-                        // 별도 서비스의 트랜잭션을 통해 뉴스 연관관계와 함께 저장
                         quizService.saveQuizzesWithNews(response.getQuizList(), newsId);
                     }
                 },error -> {
                     log.error("LLM 호출 중 에러 발생 (뉴스 ID: {}): {}", newsId, error.getMessage());
                 });
     }
-    
-    public List<QuizResponseDTO.QuizGenerateResponseDTO> generateQuizByTerm(){
-        List<Term> allTerms = termRepository.findAll();
-        List<QuizRequestDTO.QuizGenerateByTermRequestDTO> requestDTO = allTerms.stream().
+
+    @Async
+    public void generateQuizByTerm(String batchId){
+        List<Term> terms = termRepository.find4RandomTerms();
+        List<QuizRequestDTO.QuizGenerateByTermRequestDTO> requestDTO = terms.stream().
                 map(QuizConverter::toQuizGenerateByTermDTO).toList();
 
         Map<String, Object> requestBody = Map.of("terms",requestDTO);
-        QuizResponseDTO.QuizListResponseDto responseDTO = webClient.post()
+        webClient.post()
                 .uri("/api/quiz/generate/terms")
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(QuizResponseDTO.QuizListResponseDto.class)
-                .block();
-
-        if (responseDTO == null || responseDTO.getQuizList() == null) {
-            throw new RuntimeException("AI 서버로부터 퀴즈를 받아오지 못했습니다.");
-        }
-
-        List<QuizResponseDTO.QuizGenerateResponseDTO> quizList = responseDTO.getQuizList();
-
-        // 받아온 퀴즈를 DB에 저장
-        List<Quiz> saved = quizRepository.saveAll(
-                quizList.stream()
-                        .map(dto -> QuizConverter.toQuizEntity(dto,null,null))
-                        .toList()
-        );
-
-        return saved.stream()
-                .map(QuizConverter::toQuizDTO)
-                .toList();
+                .subscribe(response -> {
+                    if (response != null && response.getQuizList() != null) {
+                        quizService.saveQuizzesWithTerms(response.getQuizList(), batchId);
+                    }
+                },error -> {
+                    log.error("LLM 호출 중 에러 발생: {}", error.getMessage());
+                });
     }
 }

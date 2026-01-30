@@ -50,6 +50,11 @@ public class QuizService {
         return quizzes.stream().map(quiz -> QuizConverter.toQuizDTO(quiz)).toList();
     }
 
+    public List<QuizResponseDTO.QuizGenerateResponseDTO> getQuizzesWithTerms(String batchId){
+        List<Quiz> quizzes = quizRepository.findByBatchId(batchId);
+        return quizzes.stream().map(quiz -> QuizConverter.toQuizDTO(quiz)).toList();
+    }
+
     @Transactional
     public QuizResponseDTO.SubmitResultDTO submitAnswer(Long quizId, Long memberId, QuizRequestDTO.SubmitDTO request){
         Member member = memberRepository.findById(memberId).orElseThrow(
@@ -75,6 +80,16 @@ public class QuizService {
         News news = newsRepository.getReferenceById(newsId); //ID만 필요하기 때문
         List<Quiz> entities = quizList.stream()
                 .map(dto -> QuizConverter.toQuizEntity(dto, news, null)).toList();
+        quizRepository.saveAll(entities);
+    }
+
+    @Transactional
+    public void saveQuizzesWithTerms(List<QuizResponseDTO.QuizGenerateResponseDTO> quizList, String batchId) {
+        List<Quiz> entities = quizList.stream()
+                .map(dto -> {
+                    return QuizConverter.toQuizEntity(dto, null, batchId);
+                })
+                .toList();
         quizRepository.saveAll(entities);
     }
 }
