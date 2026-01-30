@@ -1,5 +1,6 @@
 package com.newconomy.quiz.converter;
 
+import com.newconomy.news.domain.News;
 import com.newconomy.quiz.domain.Quiz;
 import com.newconomy.quiz.domain.QuizAttempt;
 import com.newconomy.quiz.domain.QuizOption;
@@ -12,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuizConverter {
-    public static Quiz toQuizEntity(QuizResponseDTO.QuizGenerateResponseDTO dto) {
+    public static Quiz toQuizEntity(QuizResponseDTO.QuizGenerateResponseDTO dto, News news, Term term) {
         Quiz quiz = Quiz.builder()
+                .news(news)
+                .term(term)
                 .quizType(QuizType.valueOf(dto.getQuizType()))
                 .question(dto.getQuestion())
                 .correctAnswer(dto.getCorrectAnswer())

@@ -4,6 +4,8 @@ import com.newconomy.global.error.exception.GeneralException;
 import com.newconomy.global.response.status.ErrorStatus;
 import com.newconomy.member.domain.Member;
 import com.newconomy.member.repository.MemberRepository;
+import com.newconomy.news.domain.News;
+import com.newconomy.news.repository.NewsRepository;
 import com.newconomy.quiz.converter.QuizConverter;
 import com.newconomy.quiz.domain.Quiz;
 import com.newconomy.quiz.domain.QuizAttempt;
@@ -28,12 +30,8 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final MemberRepository memberRepository;
     private final QuizAttemptRepository quizAttemptRepository;
+    private final NewsRepository newsRepository;
 
-//    public Page<QuizResponseDTO.QuizGenerateResponseDTO> getQuizzes(Pageable pageable){
-//        Page<Quiz> allQuizzes = quizRepository.findAll(pageable);
-//
-//        return allQuizzes.map(QuizConverter::toQuizDTO);
-//    }
 
     public Page<QuizResponseDTO.SubmitResultDTO> getQuizAttempts(Long memberId, Pageable pageable){
         Member member = memberRepository.findById(memberId).orElseThrow(
@@ -45,6 +43,11 @@ public class QuizService {
     public Page<QuizResponseDTO.SubmitResultDTO> getWrongQuizzes(Long memberId, Pageable pageable){
         Page<QuizAttempt> quizAttempts = quizAttemptRepository.findWrongQuizzesByMemberId(memberId, pageable);
         return quizAttempts.map(QuizConverter::toSubmitResultDTO);
+    }
+
+    public List<QuizResponseDTO.QuizGenerateResponseDTO> getQuizzesWithNews(Long newsId){
+        List<Quiz> quizzes = quizRepository.findByNewsId(newsId);
+        return quizzes.stream().map(quiz -> QuizConverter.toQuizDTO(quiz)).toList();
     }
 
     @Transactional
@@ -67,4 +70,11 @@ public class QuizService {
         return QuizConverter.toSubmitResultDTO(saved);
     }
 
+    @Transactional
+    public void saveQuizzesWithNews(List<QuizResponseDTO.QuizGenerateResponseDTO> quizList, Long newsId) {
+        News news = newsRepository.getReferenceById(newsId); //ID만 필요하기 때문
+        List<Quiz> entities = quizList.stream()
+                .map(dto -> QuizConverter.toQuizEntity(dto, news, null)).toList();
+        quizRepository.saveAll(entities);
+    }
 }
