@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.swing.text.html.Option;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,8 @@ public interface TermRepository extends JpaRepository<Term, Long> {
     List<Term> searchByKeywordTop10(@Param("keyword") String keyword, Pageable pageable);
 
     Optional<Term> findByTermName(String termName);
+    List<Term> findByTermNameIn(Collection<String> termNames);
+
+    @Query(value = "SELECT * FROM Term ORDER BY RAND() LIMIT 4", nativeQuery = true)
+    List<Term> find4RandomTerms();
 }

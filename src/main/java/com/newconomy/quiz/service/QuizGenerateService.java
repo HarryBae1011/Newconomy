@@ -12,6 +12,7 @@ import com.newconomy.term.repository.TermRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,59 +31,51 @@ public class QuizGenerateService {
     private final QuizRepository quizRepository;
     private final NewsRepository newsRepository;
     private final TermRepository termRepository;
+    private final QuizService quizService;
     private final WebClient webClient;
 
-    public List<QuizResponseDTO.QuizGenerateResponseDTO> generateQuiz(Long newsId) {
+    @Async
+    public void generateQuiz(Long newsId) {
+
+        if(quizRepository.existsByNewsId(newsId)){
+            return;
+        }
+
         News news = newsRepository.findById(newsId).orElseThrow(() ->
                 new EntityNotFoundException("뉴스를 찾을 수 없습니다"));
 
-        QuizResponseDTO.QuizListResponseDto responseDto = webClient.post()
+        webClient.post()
                 .uri("/api/quiz/generate")
                 .bodyValue(new QuizRequestDTO.QuizGenerateRequestDTO(news.getId(), news.getFullContent()))
                 .retrieve()
                 .bodyToMono(QuizResponseDTO.QuizListResponseDto.class)
-                .block();
-
-        if (responseDto == null || responseDto.getQuizList() == null) {
-            throw new IllegalStateException("퀴즈 생성 API 응답이 비어 있습니다");
-        }
-
-        List<QuizResponseDTO.QuizGenerateResponseDTO> quizList = responseDto.getQuizList();
-        List<Quiz> saved = quizRepository.saveAll(quizList.stream().map(QuizConverter::toQuizEntity)
-                .toList());
-        List<QuizResponseDTO.QuizGenerateResponseDTO> result = saved.stream().map(QuizConverter::toQuizDTO).toList();
-        log.info("뉴스 ID {}로부터 {}개의 퀴즈가 성공적으로 생성 및 저장되었습니다.", newsId, saved.size());
-        return result;
+                .subscribe(response -> {
+                    if (response != null && response.getQuizList() != null) {
+                        quizService.saveQuizzesWithNews(response.getQuizList(), newsId);
+                    }
+                },error -> {
+                    log.error("LLM 호출 중 에러 발생 (뉴스 ID: {}): {}", newsId, error.getMessage());
+                });
     }
-    
-    public List<QuizResponseDTO.QuizGenerateResponseDTO> generateQuizByTerm(){
-        List<Term> allTerms = termRepository.findAll();
-        List<QuizRequestDTO.QuizGenerateByTermRequestDTO> requestDTO = allTerms.stream().
+
+    @Async
+    public void generateQuizByTerm(String batchId){
+        List<Term> terms = termRepository.find4RandomTerms();
+        List<QuizRequestDTO.QuizGenerateByTermRequestDTO> requestDTO = terms.stream().
                 map(QuizConverter::toQuizGenerateByTermDTO).toList();
 
         Map<String, Object> requestBody = Map.of("terms",requestDTO);
-        QuizResponseDTO.QuizListResponseDto responseDTO = webClient.post()
+        webClient.post()
                 .uri("/api/quiz/generate/terms")
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(QuizResponseDTO.QuizListResponseDto.class)
-                .block();
-
-        if (responseDTO == null || responseDTO.getQuizList() == null) {
-            throw new RuntimeException("AI 서버로부터 퀴즈를 받아오지 못했습니다.");
-        }
-
-        List<QuizResponseDTO.QuizGenerateResponseDTO> quizList = responseDTO.getQuizList();
-
-        // 받아온 퀴즈를 DB에 저장
-        List<Quiz> saved = quizRepository.saveAll(
-                quizList.stream()
-                        .map(QuizConverter::toQuizEntity)
-                        .toList()
-        );
-
-        return saved.stream()
-                .map(QuizConverter::toQuizDTO)
-                .toList();
+                .subscribe(response -> {
+                    if (response != null && response.getQuizList() != null) {
+                        quizService.saveQuizzesWithTerms(response.getQuizList(), batchId);
+                    }
+                },error -> {
+                    log.error("LLM 호출 중 에러 발생: {}", error.getMessage());
+                });
     }
 }
