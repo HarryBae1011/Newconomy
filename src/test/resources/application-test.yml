@@ -39,11 +39,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
-  jwt:
-    secret: test-secret
-    expiration: 3600000
+jwt:
+  secret: test-secret
+  expiration: 3600000
 
-  naver:
-    client:
-      id: test
-      secret: test
+naver:
+  client:
+    id: test
+    secret: test
