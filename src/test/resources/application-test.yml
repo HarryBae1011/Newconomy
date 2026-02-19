@@ -40,7 +40,7 @@ spring:
             user-name-attribute: id
 
 jwt:
-  secret: test-secret
+  secret: this-is-a-very-long-test-secret-key-for-jwt-token
   expiration: 3600000
 
 naver:
