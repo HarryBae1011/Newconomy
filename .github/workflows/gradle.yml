@@ -71,6 +71,6 @@ jobs:
             set -e
             aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
             cd ~/workspace
-            sudo docker-compose pull
-            sudo docker-compose up -d
+            sudo docker compose pull
+            sudo docker compose up -d
             sudo docker image prune -f
